@@ -11,29 +11,21 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A simple but powerful Paypal SDK for flutter.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+It utilizes [Flutter Webview](https://pub.dev/packages/webview_flutter_x5), to complete the payment process, "It's a Simple Spell But Quite Unbreakable".
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+After adding the package to your `pubspec.yaml`, make sure to import it
+
 
 ```dart
-const like = 'sample';
+import 'package:flutter_paypal/flutter_paypal.dart';`
 ```
 
-## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+You can checkout a simple illustration in the `/example` folder. 
