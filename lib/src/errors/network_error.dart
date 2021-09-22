@@ -14,9 +14,10 @@ class NetworkError extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.network_wifi_outlined,
-            size: 120,
+          Image.asset(
+            "lib/src/assets/img/cloud_state.png",
+            package: "flutter_paypal",
+            height: 120,
           ),
           SizedBox(
             height: isSmall ? 20 : 40,
