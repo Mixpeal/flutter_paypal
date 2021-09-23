@@ -43,33 +43,35 @@ class _MyHomePageState extends State<MyHomePage> {
                       MaterialPageRoute(
                         builder: (BuildContext context) => UsePaypal(
                             sandboxMode: true,
-                            clientId: "YOUR_CLIENT_ID",
-                            secretKey: "YOUR_CLIENT_SECRET",
-                            returnURL: "https://paypal.com",
-                            cancelURL: "https://paypal.com",
+                            clientId:
+                                "YOUR_CLIENT_ID",
+                            secretKey:
+                                "YOUR_SECRET_KEY",
+                            returnURL: "https://samplesite.com/return",
+                            cancelURL: "https://samplesite.com/cancel",
                             transactions: const [
                               {
                                 "amount": {
-                                  "total": '1.99',
+                                  "total": '10.12',
                                   "currency": "USD",
                                   "details": {
-                                    "subtotal": '1.99',
+                                    "subtotal": '10.12',
                                     "shipping": '0',
                                     "shipping_discount": 0
                                   }
                                 },
                                 "description":
                                     "The payment transaction description.",
-                                "payment_options": {
-                                  "allowed_payment_method":
-                                      "INSTANT_FUNDING_SOURCE"
-                                },
+                                // "payment_options": {
+                                //   "allowed_payment_method":
+                                //       "INSTANT_FUNDING_SOURCE"
+                                // },
                                 "item_list": {
                                   "items": [
                                     {
                                       "name": "A demo product",
                                       "quantity": 1,
-                                      "price": '1.99',
+                                      "price": '10.12',
                                       "currency": "USD"
                                     }
                                   ],
@@ -89,12 +91,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               }
                             ],
                             note: "Contact us for any questions on your order.",
-                            onFinish: (Map params) async {
-                              print(params);
-                              Navigator.pop(context);
+                            onSuccess: (Map params) async {
+                              print("onSuccess: $params");
                             },
                             onError: (error) {
-                              print(error);
+                              print("onError: $error");
+                            },
+                            onCancel: (params) {
+                              print('cancelled: $params');
                             }),
                       ),
                     )

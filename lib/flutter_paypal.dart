@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_paypal/src/screens/complete_payment.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webview_flutter_x5/webview_flutter.dart';
 
@@ -11,14 +12,15 @@ import 'src/PaypalServices.dart';
 import 'src/errors/network_error.dart';
 
 class UsePaypal extends StatefulWidget {
-  final Function onFinish, onError;
+  final Function onSuccess, onCancel, onError;
   final String returnURL, cancelURL, note, clientId, secretKey;
   final List transactions;
   final bool sandboxMode;
   const UsePaypal({
     Key? key,
-    required this.onFinish,
+    required this.onSuccess,
     required this.onError,
+    required this.onCancel,
     required this.returnURL,
     required this.cancelURL,
     required this.transactions,
@@ -38,8 +40,7 @@ class UsePaypalState extends State<UsePaypal> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
   String checkoutUrl = '';
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  String navUrl = 'https://www.api.paypal.com';
+  String navUrl = '';
   String executeUrl = '';
   String accessToken = '';
   bool loading = true;
@@ -129,6 +130,11 @@ class UsePaypalState extends State<UsePaypal> {
       clientId: widget.clientId,
       secretKey: widget.secretKey,
     );
+    setState(() {
+      navUrl = widget.sandboxMode
+          ? 'https://api.sandbox.paypal.com'
+          : 'https://www.api.paypal.com';
+    });
     // Enable hybrid composition.
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     loadPayment();
@@ -221,7 +227,7 @@ class UsePaypalState extends State<UsePaypal> {
                             child: Center(
                               child: NetworkError(
                                   loadData: loadPayment,
-                                  message: "Network error,"),
+                                  message: "Something went wrong,"),
                             ),
                           ),
                         ],
@@ -246,34 +252,23 @@ class UsePaypalState extends State<UsePaypal> {
                                     .startsWith('https://www.youtube.com/')) {
                                   return NavigationDecision.prevent;
                                 }
-
                                 if (request.url.contains(widget.returnURL)) {
-                                  setState(() {
-                                    navUrl = widget.returnURL;
-                                  });
-                                  final uri = Uri.parse(request.url);
-                                  final payerID =
-                                      uri.queryParameters['PayerID'];
-                                  if (payerID != null) {
-                                    Map params = {
-                                      "payerID": payerID,
-                                      "paymentId":
-                                          uri.queryParameters['paymentId'],
-                                      "token": uri.queryParameters['token'],
-                                    };
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    await widget.onFinish(params);
-                                    setState(() {
-                                      loading = false;
-                                    });
-                                    return NavigationDecision.prevent;
-                                  } else {
-                                    Navigator.of(context).pop();
-                                  }
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CompletePayment(
+                                            url: request.url,
+                                            services: services,
+                                            executeUrl: executeUrl,
+                                            accessToken: accessToken,
+                                            onSuccess: widget.onSuccess,
+                                            onCancel: widget.onCancel,
+                                            onError: widget.onError)),
+                                  );
                                 }
                                 if (request.url.contains(widget.cancelURL)) {
+                                  final uri = Uri.parse(request.url);
+                                  await widget.onCancel(uri.queryParameters);
                                   Navigator.of(context).pop();
                                 }
                                 return NavigationDecision.navigate;

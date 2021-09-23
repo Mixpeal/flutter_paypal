@@ -82,4 +82,28 @@ class PaypalServices {
       rethrow;
     }
   }
+
+  Future<Map> executePayment(url, payerId, accessToken) async {
+    try {
+      var response = await http.post(Uri.parse(url),
+          body: convert.jsonEncode({"payer_id": payerId}),
+          headers: {
+            "content-type": "application/json",
+            'Authorization': 'Bearer ' + accessToken
+          });
+
+      final body = convert.jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {'error': false, 'message': "Success", 'data': body};
+      } else {
+        return {
+          'error': true,
+          'message': "Payment inconclusive.",
+          'data': body
+        };
+      }
+    } catch (e) {
+      return {'error': true, 'message': e, 'exception': true, 'data': null};
+    }
+  }
 }
