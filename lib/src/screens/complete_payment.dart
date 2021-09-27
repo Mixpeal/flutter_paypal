@@ -51,16 +51,16 @@ class _CompletePaymentState extends State<CompletePayment> {
           loading = false;
           loadingError = false;
         });
-        Navigator.of(context).pop();
+        Navigator.pop(context);
       } else {
         if (resp['exception'] != null && resp['exception'] == true) {
-          widget.onError(resp['message']);
+          widget.onError({"message": resp['message']});
           setState(() {
             loading = false;
             loadingError = true;
           });
         } else {
-          widget.onError(resp['data']);
+          await widget.onError(resp['data']);
           Navigator.of(context).pop();
         }
       }

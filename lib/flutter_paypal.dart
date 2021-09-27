@@ -84,11 +84,7 @@ class UsePaypalState extends State<UsePaypal> {
             loadingError = false;
           });
         } else {
-          if (res['details'][0] != null && res['details'][0]['issue'] != null) {
-            widget.onError("${res['details'][0]['issue']}");
-          } else {
-            widget.onError("Unable to proceed payment, please try again.");
-          }
+          widget.onError(res);
           setState(() {
             loading = false;
             pageloading = false;
