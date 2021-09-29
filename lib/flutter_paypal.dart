@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/src/screens/complete_payment.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:webview_flutter_x5/webview_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'src/PaypalServices.dart';
 import 'src/errors/network_error.dart';
