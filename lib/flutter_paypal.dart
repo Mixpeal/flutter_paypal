@@ -3,13 +3,14 @@ library flutter_paypal;
 import 'dart:async';
 import 'dart:core';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/src/screens/complete_payment.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'src/PaypalServices.dart';
 import 'src/errors/network_error.dart';
+import 'src/paypal_services.dart';
 
 class UsePaypal extends StatefulWidget {
   final Function onSuccess, onCancel, onError;
@@ -239,9 +240,9 @@ class UsePaypalState extends State<UsePaypal> {
                                   (WebViewController webViewController) {
                                 _controller.complete(webViewController);
                               },
-                              javascriptChannels: <JavascriptChannel>[
+                              javascriptChannels: <JavascriptChannel>{
                                 _toasterJavascriptChannel(context),
-                              ].toSet(),
+                              },
                               navigationDelegate:
                                   (NavigationRequest request) async {
                                 if (request.url

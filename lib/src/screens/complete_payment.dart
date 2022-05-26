@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paypal/src/errors/network_error.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../PaypalServices.dart';
+import '../paypal_services.dart';
 
 class CompletePayment extends StatefulWidget {
   final Function onSuccess, onCancel, onError;
@@ -78,36 +78,42 @@ class _CompletePaymentState extends State<CompletePayment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: loading
-            ? Column(
-                children: const [
-                  Expanded(
-                    child: Center(
-                      child: SpinKitFadingCube(
-                        color: Color(0xFFEB920D),
-                        size: 30.0,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : loadingError
-                ? Column(
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: NetworkError(
-                              loadData: complete,
-                              message: "Something went wrong,"),
+    return WillPopScope(
+      onWillPop: () async {
+        widget.onCancel();
+        return true;
+      },
+      child: Scaffold(
+        body: Container(
+          child: loading
+              ? Column(
+                  children: const [
+                    Expanded(
+                      child: Center(
+                        child: SpinKitFadingCube(
+                          color: Color(0xFFEB920D),
+                          size: 30.0,
                         ),
                       ),
-                    ],
-                  )
-                : const Center(
-                    child: Text("Payment Completed"),
-                  ),
+                    ),
+                  ],
+                )
+              : loadingError
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: NetworkError(
+                                loadData: complete,
+                                message: "Something went wrong,"),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const Center(
+                      child: Text("Payment Completed"),
+                    ),
+        ),
       ),
     );
   }
